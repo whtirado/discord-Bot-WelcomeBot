@@ -25,6 +25,12 @@ client.on('guildMemberAdd', (member) => {
         return role.name === defaults.defaultRole;
     });
 
+    // Welcome message
+    const defaultWelcomeMessage = `:confetti_ball: We got a new member <@${member.user.id}> joined ${dateTime} :confetti_ball:`
+
+    // Log new member to console
+    console.log(defaultWelcomeMessage);
+
     // Assign "Member" role to new member
     member.addRole(memberRole);
 
@@ -37,7 +43,7 @@ client.on('guildMemberAdd', (member) => {
     .find((channel) => {
         return channel.name === defaults.defaultWelcome;
     })
-    .send(`:confetti_ball: We got a new member <@${member.user.id}> joined ${dateTime} :confetti_ball:`);
+    .send(defaultWelcomeMessage);
 });
 
 client.login(config.token);
