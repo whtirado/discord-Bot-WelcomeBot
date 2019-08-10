@@ -28,6 +28,9 @@ client.on('guildMemberAdd', (member) => {
     // Welcome message
     const defaultWelcomeMessage = `:confetti_ball: We got a new member <@${member.user.id}> joined ${dateTime} :confetti_ball:`;
 
+    // Log new member tag
+    console.log(`New member: ${member.user.tag}`);
+
     // Assign "Member" role to new member
     member.addRole(memberRole);
 
