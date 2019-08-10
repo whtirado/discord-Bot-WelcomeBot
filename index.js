@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const controllers = require('./controllers/bot.controllers');
 const config = require('./config');
 const defaults = require('./defaults');
 
