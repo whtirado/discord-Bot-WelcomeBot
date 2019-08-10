@@ -6,13 +6,17 @@ const client = new Discord.Client();
 
 // Triggers when bot goes online
 client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}!`);
+    // Local date/time when Bot started
+    const dateTime = (new Date()).toGMTString();
+
+    // Log message when Bot starts
+    console.log(`Logged in as ${client.user.tag} @ ${dateTime}`);
 });
 
 // Triggered when new member joins
 client.on('guildMemberAdd', (member) => {
 
-    // Local date/time
+    // Local date/time when user joined
     const dateTime = (new Date()).toGMTString();
 
     // Default channel
@@ -29,7 +33,7 @@ client.on('guildMemberAdd', (member) => {
     const defaultWelcomeMessage = `:confetti_ball: We got a new member <@${member.user.id}> joined ${dateTime} :confetti_ball:`;
 
     // Log new member tag
-    console.log(`New member: ${member.user.tag}`);
+    console.log(`New member: ${member.user.tag} @ ${dateTime}`);
 
     // Assign "Member" role to new member
     member.addRole(memberRole);
