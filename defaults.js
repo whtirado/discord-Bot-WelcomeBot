@@ -1,8 +1,8 @@
 // Default role assigned to new member
-exports.defaultRole = 'Member';
+exports.defaultRole = 'Members';
 
 // Default channel to mention in welcome DM
-exports.defaultChannel = 'general';
+exports.defaultChannel = 'basics';
 
 // Default channel to send member and display new member message
-exports.defaultWelcome = 'welcome';
+exports.defaultWelcome = 'new-member';
