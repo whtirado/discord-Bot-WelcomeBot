@@ -16,10 +16,14 @@ client.on('guildMemberAdd', (member) => {
     const dateTime = (new Date()).toGMTString();
 
     // Default channel
-    const rulesChannel = client.channels.find('name', defaults.defaultChannel);
+    const rulesChannel = client.channels.find((channel) => {
+        return channel.name === defaults.defaultChannel;
+    });
 
     // Get "Member" role
-    const memberRole = member.guild.roles.find('name', defaults.defaultRole);
+    const memberRole = member.guild.roles.find((role) => {
+        return role.name === defaults.defaultRole;
+    });
 
     // Assign "Member" role to new member
     member.addRole(memberRole);
@@ -30,7 +34,9 @@ client.on('guildMemberAdd', (member) => {
     // Send member to "welcome" channel
     client
     .channels
-    .find('name','welcome')
+    .find((channel) => {
+        return channel.name === defaults.defaultWelcome;
+    })
     .send(`:confetti_ball: We got a new member <@${member.user.id}> joined ${dateTime} :confetti_ball:`);
 });
 
