@@ -1,1 +1,1 @@
-exports.token = process.env.token;
+exports.token = process.env.TOKEN;
