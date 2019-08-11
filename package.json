@@ -1,5 +1,5 @@
 {
-  "name": "LifeBreaksFree Welcome Bot",
+  "name": "WelcomeBot",
   "version": "1.0.0",
   "description": "Discord welcome bot.",
   "main": "index.js",
