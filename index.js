@@ -13,12 +13,11 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag} @ ${dateTime}`);
 });
 
-//
-client.on('disconnect', (errMsg, code) => {
-    console.log('Bot Disconnected...');
-    console.log(`Error (${code}): ${errMsg}`);
-    client.login(config.token);
-});
+// client.on('disconnect', (errMsg, code) => {
+//     console.log('Bot Disconnected...');
+//     console.log(`Error (${code}): ${errMsg}`);
+//     client.login(config.token);
+// });
 
 // Triggered when new member joins
 client.on('guildMemberAdd', (member) => {
