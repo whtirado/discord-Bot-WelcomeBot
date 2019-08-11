@@ -16,6 +16,9 @@ client.on('ready', () => {
 // Triggered when new member joins
 client.on('guildMemberAdd', (member) => {
 
+    // Local date/time when Bot started
+    const dateTime = (new Date()).toGMTString();
+
     // Default channel
     const rulesChannel = client.channels.find((channel) => {
         return channel.name === defaults.defaultChannel;
