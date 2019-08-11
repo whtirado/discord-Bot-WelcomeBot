@@ -1,7 +1,7 @@
 {
-  "name": "testbot",
+  "name": "LifeBreaksFree Welcome Bot",
   "version": "1.0.0",
-  "description": "Discord test bot",
+  "description": "Discord welcome bot.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -14,5 +14,9 @@
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
+  },
+  "engines": {
+    "node": "~10.16.0",
+    "npm": "~6.9.0"
   }
 }
