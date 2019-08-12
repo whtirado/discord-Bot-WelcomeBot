@@ -4,17 +4,19 @@ const defaults = require('./defaults');
 
 const bot = new Discord.Client();
 
-const getRole = (member, targetRole) => {
-    return member.guild.roles.find((role) => {
+const getRole = (context, targetRole) => {
+    return context.roles.find((role) => {
         return role.name === targetRole;
     });
 };
 
-const ChannelMessage = (targetChannel, message) => {
-    const channel = bot.channels.find((channel) => {
+const getChannel = (context, targetChannel) => {
+    return context.channels.find((channel) => {
         return channel.name === targetChannel;
     });
-    
+};
+
+const ChannelMessage = (channel, message) => {
     if (channel) {
         channel.send(message);
     }
@@ -37,13 +39,14 @@ bot.on('guildMemberAdd', (member) => {
     // Local date/time when user joined
     const dateTime = (new Date()).toDateString();
 
-    // Default channel
-    const rulesChannel = bot.channels.find((channel) => {
-        return channel.name === defaults.defaultChannel;
-    });
+    // Get default DM mention channel
+    const rulesChannel = getChannel(member.guild, defaults.defaultDmMentionChannel);
 
     // Get "Members" role
-    const memberRole = getRole(member, defaults.defaultRole);
+    const memberRole = getRole(member.guild, defaults.defaultRole);
+
+    // Get welcome channel
+    const welcomeChannel = getChannel(member.guild, defaults.defaultWelcome);
 
     // Welcome message
     const defaultWelcomeMessage = `:confetti_ball: We got a new member <@${member.user.id}> joined ${dateTime} :confetti_ball:`;
@@ -58,7 +61,7 @@ bot.on('guildMemberAdd', (member) => {
     member.send(`Welcome to IsleLifeBreaksFree. Please make sure to read rules <#${rulesChannel.id}>`);
 
     // Send member to "welcome" channel
-    ChannelMessage(defaults.defaultWelcome, defaultWelcomeMessage);
+    ChannelMessage(welcomeChannel, defaultWelcomeMessage);
 });
 
 // Triggers when message received
@@ -80,18 +83,21 @@ bot.on('message', (message) => {
                 // Affected members
                 const affectedMembers = 0;
 
+                // Get welcome channel
+                const welcomeChannel = getChannel(message.guild, defaults.defaultWelcome);
+
                 // Welcome message
                 const defaultWelcomeMessage = `:confetti_ball: We got a new member <@${message.member.user.id}> joined ${dateTime} :confetti_ball:`;
 
                 // Get "Members" role
-                const memberRole = getRole(message, defaults.defaultRole);
+                const memberRole = getRole(message.guild, defaults.defaultRole);
 
                 // Assign 'Members' role to new members
                 message.guild.members.forEach((member) => {
                     if (member.roles.size === 1) {
                         affectedMembers += 1;
                         member.addRole(memberRole);
-                        ChannelMessage(defaults.defaultWelcome, defaultWelcomeMessage);
+                        ChannelMessage(welcomeChannel, defaultWelcomeMessage);
                     }
                 });
 
