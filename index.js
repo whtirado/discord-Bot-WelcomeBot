@@ -58,6 +58,34 @@ const AssignMembersRole = (member) => {
 
 };
 
+const handleAssignMembers = (message) => {
+
+    // Check if member has permissions
+    if (message.member.hasPermission('MANAGE_ROLES')) {
+
+        // Affected members
+        let affectedMembers = 0;
+
+        // Assign "Members" role to new members
+        message.guild.members.forEach((member) => {
+            if (member.roles.size == 1) {
+
+                // Increment number of members affected by command
+                affectedMembers += 1;
+
+                // Assign "Members" role
+                AssignMembersRole(member);
+
+            }
+        });
+
+        // Respond to member with command details
+        message.channel.send(`Command excecuted: ${affectedMembers} member(s) affected.`);
+
+    }
+
+};
+
 // Triggers when bot goes online
 bot.on('ready', () => {
 
@@ -89,29 +117,8 @@ bot.on('message', (message) => {
         // Check if command is assignMembers
         if (message.content.startsWith(`${config.prefix}assignMembers`)) {
 
-            // Check if member has permissions
-            if (message.member.hasPermission('MANAGE_ROLES')) {
-
-                // Affected members
-                let affectedMembers = 0;
-
-                // Assign "Members" role to new members
-                message.guild.members.forEach((member) => {
-                    if (member.roles.size == 1) {
-
-                        // Increment number of members affected by command
-                        affectedMembers += 1;
-
-                        // Assign "Members" role
-                        AssignMembersRole(member);
-
-                    }
-                });
-
-                // Respond to member with command details
-                message.channel.send(`Command excecuted: ${affectedMembers} member(s) affected.`);
-
-            }
+            // Excecute logic for adding "Members" role
+            handleAssignMembers(message);
 
         }
 
