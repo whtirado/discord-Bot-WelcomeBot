@@ -24,16 +24,16 @@ const AssignMembersRole = (member) => {
     // Local date/time when user joined
     const dateTime = (new Date()).toDateString();
 
-    // Get "Members" role
+    // Get default "Members" role
     const membersRole = getRole(member.guild, defaults.defaultRole);
 
     // Get default DM mention channel
     const rulesChannel = getChannel(member.guild, defaults.defaultDmMentionChannel);
 
-    // Get welcome channel
+    // Get default welcome channel
     const welcomeChannel = getChannel(member.guild, defaults.defaultWelcome);
 
-    // Welcome message
+    // Default welcome message
     const defaultWelcomeMessage = `:confetti_ball: We got a new member <@${member.user.id}> joined ${dateTime} :confetti_ball:`;
 
     // Assign "Member" role to new member
@@ -99,7 +99,7 @@ bot.on('message', (message) => {
                 message.guild.members.forEach((member) => {
                     if (member.roles.size == 1) {
 
-                        // Increment number of members affected by commad
+                        // Increment number of members affected by command
                         affectedMembers += 1;
 
                         // Assign "Members" role
