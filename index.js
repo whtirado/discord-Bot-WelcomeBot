@@ -18,28 +18,17 @@ const getChannel = (context, targetChannel) => {
     });
 };
 
-// Triggers when bot goes online
-bot.on('ready', () => {
-
-    // Local date/time when Bot started
-    const dateTime = (new Date()).toDateString();
-
-    // Log message when Bot starts
-    console.log(`Logged in as ${bot.user.tag} @ ${dateTime}`);
-
-});
-
-// Triggered when new member joins
-bot.on('guildMemberAdd', (member) => {
+// Assign "Members" role and welcome new member
+const AssignMembersRole = (member) => {
 
     // Local date/time when user joined
     const dateTime = (new Date()).toDateString();
 
+    // Get "Members" role
+    const membersRole = getRole(member.guild, defaults.defaultRole);
+
     // Get default DM mention channel
     const rulesChannel = getChannel(member.guild, defaults.defaultDmMentionChannel);
-
-    // Get "Members" role
-    const memberRole = getRole(member.guild, defaults.defaultRole);
 
     // Get welcome channel
     const welcomeChannel = getChannel(member.guild, defaults.defaultWelcome);
@@ -48,7 +37,7 @@ bot.on('guildMemberAdd', (member) => {
     const defaultWelcomeMessage = `:confetti_ball: We got a new member <@${member.user.id}> joined ${dateTime} :confetti_ball:`;
 
     // Assign "Member" role to new member
-    member.addRole(memberRole).then(() => {
+    member.addRole(membersRole).then(() => {
 
         // Log new members to console
         console.log(`New member added ${member.user.tag} on ${dateTime}`);
@@ -66,6 +55,23 @@ bot.on('guildMemberAdd', (member) => {
         console.log(`Command Error: Did not assign "Members" role to ${member.user.tag}`);
 
     });
+
+};
+
+// Triggers when bot goes online
+bot.on('ready', () => {
+
+    // Log message when Bot starts
+    console.log(`Logged in as ${bot.user.tag}`);
+
+});
+
+// Triggered when new member joins
+bot.on('guildMemberAdd', (member) => {
+
+    // Assign "Members" role
+    AssignMembersRole(member);
+    
 });
 
 // Triggers when message received
@@ -80,9 +86,6 @@ bot.on('message', (message) => {
     // Check if message is command
     if (message.content.startsWith(config.prefix)) {
 
-        // Local date/time when command was typed
-        const dateTime = (new Date()).toDateString();
-
         // Check if command is assignMembers
         if (message.content.startsWith(`${config.prefix}assignMembers`)) {
 
@@ -92,12 +95,6 @@ bot.on('message', (message) => {
                 // Affected members
                 let affectedMembers = 0;
 
-                // Get welcome channel
-                const welcomeChannel = getChannel(message.guild, defaults.defaultWelcome);
-
-                // Get "Members" role
-                const memberRole = getRole(message.guild, defaults.defaultRole);
-
                 // Assign "Members" role to new members
                 message.guild.members.forEach((member) => {
                     if (member.roles.size == 1) {
@@ -105,22 +102,8 @@ bot.on('message', (message) => {
                         // Increment number of members affected by commad
                         affectedMembers += 1;
 
-                        // Assign new member the "Members" role
-                        member.addRole(memberRole).then(() => {
-
-                            // Send channel a message with new member
-                            welcomeChannel.send(`:confetti_ball: We got a new member <@${member.user.id}> joined ${dateTime} :confetti_ball:`);
-                    
-                            // Log new members to console
-                            console.log(`New member added ${member.user.tag} on ${dateTime}`);
-
-                        })
-                        .catch(() => {
-
-                            // Send message channel an error message
-                            message.channel.send(`Command Error: Did not assign Members role to ${member.user.tag}`);
-                        
-                        });
+                        // Assign "Members" role
+                        AssignMembersRole(member);
 
                     }
                 });
