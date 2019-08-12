@@ -1,90 +1,8 @@
 const Discord = require('discord.js');
+const controllers = require('./controllers/bot.controllers');
 const config = require('./config');
-const defaults = require('./defaults');
 
 const bot = new Discord.Client();
-
-// Get role by name
-const getRole = (context, targetRole) => {
-    return context.roles.find((role) => {
-        return role.name === targetRole;
-    });
-};
-
-// Get channel by name
-const getChannel = (context, targetChannel) => {
-    return context.channels.find((channel) => {
-        return channel.name === targetChannel;
-    });
-};
-
-// Assign "Members" role and welcome new member
-const AssignMembersRole = (member) => {
-
-    // Local date/time when user joined
-    const dateTime = (new Date()).toDateString();
-
-    // Get default "Members" role
-    const membersRole = getRole(member.guild, defaults.defaultRole);
-
-    // Get default DM mention channel
-    const rulesChannel = getChannel(member.guild, defaults.defaultDmMentionChannel);
-
-    // Get default welcome channel
-    const welcomeChannel = getChannel(member.guild, defaults.defaultWelcome);
-
-    // Default welcome message
-    const defaultWelcomeMessage = `:confetti_ball: We got a new member <@${member.user.id}> joined ${dateTime} :confetti_ball:`;
-
-    // Assign "Member" role to new member
-    member.addRole(membersRole).then(() => {
-
-        // Log new members to console
-        console.log(`New member added ${member.user.tag} on ${dateTime}`);
-
-        // Send member a DM
-        member.send(`Welcome to IsleLifeBreaksFree. Please make sure to read rules <#${rulesChannel.id}>`);
-
-        // Send member to "welcome" channel
-        welcomeChannel.send(defaultWelcomeMessage);
-
-    })
-    .catch(() => {
-
-        // Send message channel an error message
-        console.log(`Command Error: Did not assign "Members" role to ${member.user.tag}`);
-
-    });
-
-};
-
-const handleAssignMembers = (message) => {
-
-    // Check if member has permissions
-    if (message.member.hasPermission('MANAGE_ROLES')) {
-
-        // Affected members
-        let affectedMembers = 0;
-
-        // Assign "Members" role to new members
-        message.guild.members.forEach((member) => {
-            if (member.roles.size == 1) {
-
-                // Increment number of members affected by command
-                affectedMembers += 1;
-
-                // Assign "Members" role
-                AssignMembersRole(member);
-
-            }
-        });
-
-        // Respond to member with command details
-        message.channel.send(`Command excecuted: ${affectedMembers} member(s) affected.`);
-
-    }
-
-};
 
 // Triggers when bot goes online
 bot.on('ready', () => {
@@ -98,7 +16,7 @@ bot.on('ready', () => {
 bot.on('guildMemberAdd', (member) => {
 
     // Assign "Members" role
-    AssignMembersRole(member);
+    controllers.AssignMembersRole(member);
     
 });
 
@@ -118,7 +36,7 @@ bot.on('message', (message) => {
         if (message.content.startsWith(`${config.prefix}assignMembers`)) {
 
             // Excecute logic for adding "Members" role
-            handleAssignMembers(message);
+            controllers.handleAssignMembers(message);
 
         }
 
