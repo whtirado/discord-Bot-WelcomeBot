@@ -62,10 +62,15 @@ bot.on('guildMemberAdd', (member) => {
 
 // Triggers when message received
 bot.on('message', (message) => {
-    const isCommand = message.content.startsWith(config.prefix);
+
+    // Ignore bot messages
+    if (message.author.bot) return;
+
+    // Ignore DM messages
+    if (message.channel.type === 'dm') return;
 
     // Check if message is command
-    if (isCommand) {
+    if (message.content.startsWith(config.prefix)) {
 
         // Local date/time when command was typed
         const dateTime = (new Date()).toDateString();
