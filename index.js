@@ -4,22 +4,18 @@ const defaults = require('./defaults');
 
 const bot = new Discord.Client();
 
+// Get role by name
 const getRole = (context, targetRole) => {
     return context.roles.find((role) => {
         return role.name === targetRole;
     });
 };
 
+// Get channel by name
 const getChannel = (context, targetChannel) => {
     return context.channels.find((channel) => {
         return channel.name === targetChannel;
     });
-};
-
-const ChannelMessage = (channel, message) => {
-    if (channel) {
-        channel.send(message);
-    }
 };
 
 // Triggers when bot goes online
@@ -61,7 +57,7 @@ bot.on('guildMemberAdd', (member) => {
     member.send(`Welcome to IsleLifeBreaksFree. Please make sure to read rules <#${rulesChannel.id}>`);
 
     // Send member to "welcome" channel
-    ChannelMessage(welcomeChannel, defaultWelcomeMessage);
+    welcomeChannel.send(defaultWelcomeMessage);
 });
 
 // Triggers when message received
@@ -81,23 +77,23 @@ bot.on('message', (message) => {
             if (message.member.hasPermission('MANAGE_ROLES')) {
 
                 // Affected members
-                const affectedMembers = 0;
+                let affectedMembers = 0;
 
                 // Get welcome channel
                 const welcomeChannel = getChannel(message.guild, defaults.defaultWelcome);
-
-                // Welcome message
-                const defaultWelcomeMessage = `:confetti_ball: We got a new member <@${message.member.user.id}> joined ${dateTime} :confetti_ball:`;
 
                 // Get "Members" role
                 const memberRole = getRole(message.guild, defaults.defaultRole);
 
                 // Assign 'Members' role to new members
                 message.guild.members.forEach((member) => {
-                    if (member.roles.size === 1) {
+                    if (member.roles.size == 1) {
                         affectedMembers += 1;
                         member.addRole(memberRole);
-                        ChannelMessage(welcomeChannel, defaultWelcomeMessage);
+                        welcomeChannel.send(`:confetti_ball: We got a new member <@${member.user.id}> joined ${dateTime} :confetti_ball:`);
+                    
+                        // Log new members to console
+                        console.log(`New member added ${member.user.tag} on ${dateTime}`);
                     }
                 });
 
