@@ -1,50 +1,58 @@
 const Discord = require('discord.js');
-const controllers = require('./controllers/bot.controllers');
 const config = require('./config');
 const defaults = require('./defaults');
 
-const client = new Discord.Client();
+const bot = new Discord.Client();
+
+const getRole = (member, targetRole) => {
+    return member.guild.roles.find((role) => {
+        return role.name === targetRole;
+    });
+};
 
 const ChannelMessage = (targetChannel, message) => {
-    const channel = client.channels.find((channel) => {
+    const channel = bot.channels.find((channel) => {
         return channel.name === targetChannel;
     });
     
-    channel.send(message);
+    if (channel) {
+        channel.send(message);
+    }
 };
 
 // Triggers when bot goes online
-client.on('ready', () => {
+bot.on('ready', () => {
 
     // Local date/time when Bot started
     const dateTime = (new Date()).toDateString();
 
     // Log message when Bot starts
-    console.log(`Logged in as ${client.user.tag} @ ${dateTime}`);
+    console.log(`Logged in as ${bot.user.tag} @ ${dateTime}`);
 
 });
 
 // Triggered when new member joins
-client.on('guildMemberAdd', (member) => {
+bot.on('guildMemberAdd', (member) => {
 
     // Local date/time when user joined
     const dateTime = (new Date()).toDateString();
 
     // Default channel
-    const rulesChannel = client.channels.find((channel) => {
+    const rulesChannel = bot.channels.find((channel) => {
         return channel.name === defaults.defaultChannel;
     });
 
     // Get "Members" role
-    const memberRole = member.guild.roles.find((role) => {
-        return role.name === defaults.defaultRole;
-    });
+    const memberRole = getRole(member, defaults.defaultRole);
 
     // Welcome message
     const defaultWelcomeMessage = `:confetti_ball: We got a new member <@${member.user.id}> joined ${dateTime} :confetti_ball:`;
 
     // Assign "Member" role to new member
     member.addRole(memberRole);
+
+    // Log new members to console
+    console.log(`New member added ${member.user.tag} on ${dateTime}`);
 
     // Send member a DM
     member.send(`Welcome to IsleLifeBreaksFree. Please make sure to read rules <#${rulesChannel.id}>`);
@@ -54,7 +62,7 @@ client.on('guildMemberAdd', (member) => {
 });
 
 // Triggers when message received
-client.on('message', (message) => {
+bot.on('message', (message) => {
     const isCommand = message.content.startsWith(config.prefix);
 
     // Check if message is command
@@ -76,9 +84,7 @@ client.on('message', (message) => {
                 const defaultWelcomeMessage = `:confetti_ball: We got a new member <@${message.member.user.id}> joined ${dateTime} :confetti_ball:`;
 
                 // Get "Members" role
-                const memberRole = message.guild.roles.find((role) => {
-                    return role.name === defaults.defaultRole;
-                });
+                const memberRole = getRole(message, defaults.defaultRole);
 
                 // Assign 'Members' role to new members
                 message.guild.members.forEach((member) => {
@@ -89,6 +95,7 @@ client.on('message', (message) => {
                     }
                 });
 
+                // Respond to member with command details
                 message.channel.send(`Command excecuted: ${affectedMembers} member(s) affected.`);
 
             }
@@ -98,4 +105,4 @@ client.on('message', (message) => {
     }
 });
 
-client.login(config.token);
+bot.login(config.token);
