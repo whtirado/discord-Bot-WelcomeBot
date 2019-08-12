@@ -48,16 +48,24 @@ bot.on('guildMemberAdd', (member) => {
     const defaultWelcomeMessage = `:confetti_ball: We got a new member <@${member.user.id}> joined ${dateTime} :confetti_ball:`;
 
     // Assign "Member" role to new member
-    member.addRole(memberRole);
+    member.addRole(memberRole).then(() => {
 
-    // Log new members to console
-    console.log(`New member added ${member.user.tag} on ${dateTime}`);
+        // Log new members to console
+        console.log(`New member added ${member.user.tag} on ${dateTime}`);
 
-    // Send member a DM
-    member.send(`Welcome to IsleLifeBreaksFree. Please make sure to read rules <#${rulesChannel.id}>`);
+        // Send member a DM
+        member.send(`Welcome to IsleLifeBreaksFree. Please make sure to read rules <#${rulesChannel.id}>`);
 
-    // Send member to "welcome" channel
-    welcomeChannel.send(defaultWelcomeMessage);
+        // Send member to "welcome" channel
+        welcomeChannel.send(defaultWelcomeMessage);
+
+    })
+    .catch(() => {
+
+        // Send message channel an error message
+        console.log(`Command Error: Did not assign "Members" role to ${member.user.tag}`);
+
+    });
 });
 
 // Triggers when message received
@@ -90,15 +98,30 @@ bot.on('message', (message) => {
                 // Get "Members" role
                 const memberRole = getRole(message.guild, defaults.defaultRole);
 
-                // Assign 'Members' role to new members
+                // Assign "Members" role to new members
                 message.guild.members.forEach((member) => {
                     if (member.roles.size == 1) {
+
+                        // Increment number of members affected by commad
                         affectedMembers += 1;
-                        member.addRole(memberRole);
-                        welcomeChannel.send(`:confetti_ball: We got a new member <@${member.user.id}> joined ${dateTime} :confetti_ball:`);
+
+                        // Assign new member the "Members" role
+                        member.addRole(memberRole).then(() => {
+
+                            // Send channel a message with new member
+                            welcomeChannel.send(`:confetti_ball: We got a new member <@${member.user.id}> joined ${dateTime} :confetti_ball:`);
                     
-                        // Log new members to console
-                        console.log(`New member added ${member.user.tag} on ${dateTime}`);
+                            // Log new members to console
+                            console.log(`New member added ${member.user.tag} on ${dateTime}`);
+
+                        })
+                        .catch(() => {
+
+                            // Send message channel an error message
+                            message.channel.send(`Command Error: Did not assign Members role to ${member.user.tag}`);
+                        
+                        });
+
                     }
                 });
 
