@@ -79,6 +79,60 @@ const botControllers = {
     
         }
     
+    },
+
+    assignSeniorMembers: (message) => {
+
+        // Check for permissions
+        if (message.member.hasPermission('MANAGE_ROLES')) {
+
+            // Get "Senior Members" role
+            const seniorRole = botControllers.getRole(message.guild, 'Senior Members');
+
+            // Get "Members" role
+            const memberRole = botControllers.getRole(message.guild, 'Members');
+
+            // Loop for each member mentioned
+            message.mentions.members.forEach((member) => {
+
+                // Remove "Members" role
+                member.removeRole(memberRole).then((member) => {
+                    return member.addRole(seniorRole);
+                })
+
+                // Add "Senior Members" role
+                .then((member) => {
+
+                    // Send channel a message with each Senior Member added
+                    message.channel.send(`:confetti_ball: Senior Member status assigned to <@${member.user.id}> :confetti_ball:`);
+                
+                });
+            });
+
+        }
+    },
+
+    kickMember: (message) => {
+
+        // Check if member has permissions
+        if (message.member.hasPermission('KICK_MEMBERS')) {
+
+            // Loop for each mention
+            message.mentions.users.forEach((mention) => {
+
+                // Get member
+                const member = message.guild.members.get(mention.id);
+
+                // Kick member
+                member.kick().then((response) => {
+                    console.log(`User kicked: ${response.user.tag}`);
+                    message.channel.send(`User kicked: ${response.user.tag}`);
+                });
+
+            });
+
+        }
+
     }
 };
 

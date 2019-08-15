@@ -39,6 +39,22 @@ bot.on('message', (message) => {
             controllers.handleAssignMembers(message);
 
         }
+        
+        // check if command is kick
+        else if (message.content.startsWith(`${config.prefix}kick`)) {
+
+            // Kick member
+            controllers.kickMember(message);
+
+        }
+
+        // check if command is assignSenior
+        else if (message.content.startsWith(`${config.prefix}assignSenior`)) {
+
+            // Assign "Senior Members" role
+            controllers.assignSeniorMembers(message);
+
+        }
 
     }
 });
