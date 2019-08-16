@@ -1,3 +1,4 @@
+const discord = require('discord.js');
 const defaults = require('../defaults');
 
 const botControllers = {
@@ -15,9 +16,6 @@ const botControllers = {
     },
 
     AssignMembersRole: (member) => {
-
-        // Local date/time when user joined
-        const dateTime = (new Date()).toDateString();
     
         // Get default "Members" role
         const membersRole = botControllers.getRole(member.guild, defaults.defaultRole);
@@ -28,20 +26,27 @@ const botControllers = {
         // Get default welcome channel
         const welcomeChannel = botControllers.getChannel(member.guild, defaults.defaultWelcome);
     
-        // Default welcome message
-        const defaultWelcomeMessage = `:confetti_ball: We got a new member <@${member.user.id}> joined ${dateTime} :confetti_ball:`;
-    
         // Assign "Member" role to new member
         member.addRole(membersRole).then(() => {
+
+            const date = (new Date()).toDateString();
+
+            const richEmbed = new discord.RichEmbed()
+                .setColor('#e0c619')
+                .setTitle('New Member')
+                .setAuthor(member.user.tag, member.user.avatarURL)
+                .setDescription(`Hello I'm <@${member.user.id}>. I just became a member.`)
+                .setThumbnail(member.user.avatarURL)
+                .setFooter(date);
     
             // Log new members to console
-            console.log(`New member added ${member.user.tag} on ${dateTime}`);
+            console.log(`New member added ${member.user.tag}`);
     
             // Send member a DM
             member.send(`Welcome to IsleLifeBreaksFree. Please make sure to read rules <#${rulesChannel.id}>`);
     
             // Send member to "welcome" channel
-            welcomeChannel.send(defaultWelcomeMessage);
+            welcomeChannel.send(richEmbed);
     
         })
         .catch(() => {
@@ -103,10 +108,21 @@ const botControllers = {
                 // Add "Senior Members" role
                 .then((member) => {
 
+                    const date = (new Date()).toDateString();
+
+                    const richEmbed = new discord.RichEmbed()
+                        .setColor('#e0c619')
+                        .setTitle('New Senior Member')
+                        .setAuthor(member.user.tag, member.user.avatarURL)
+                        .setDescription(`Hello I'm <@${member.user.id}>. I just became a Senior Member.`)
+                        .setThumbnail(member.user.avatarURL)
+                        .setFooter(date);
+
                     // Send channel a message with each Senior Member added
-                    message.channel.send(`:confetti_ball: Senior Member status assigned to <@${member.user.id}> :confetti_ball:`);
+                    message.channel.send(richEmbed);
                 
                 });
+
             });
 
         }
