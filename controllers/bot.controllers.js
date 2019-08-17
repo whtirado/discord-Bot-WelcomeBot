@@ -5,14 +5,14 @@ const botControllers = {
 
     // Get guild roles
     getRole: (context, targetRole) => {
-        return context.roles.find((role) => {
+        return context.guild.roles.find((role) => {
             return role.name === targetRole;
         });
     },
 
     // Get guild channels
     getChannel: (context, targetChannel) => {
-        return context.channels.find((channel) => {
+        return context.guild.channels.find((channel) => {
             return channel.name === targetChannel;
         });
     },
@@ -20,13 +20,13 @@ const botControllers = {
     AssignMembersRole: (member) => {
     
         // Get default "Members" role
-        const membersRole = botControllers.getRole(member.guild, defaults.defaultRole);
+        const membersRole = botControllers.getRole(member, defaults.defaultRole);
     
         // Get default DM mention channel
-        const rulesChannel = botControllers.getChannel(member.guild, defaults.defaultDmMentionChannel);
+        const rulesChannel = botControllers.getChannel(member, defaults.defaultDmMentionChannel);
     
         // Get default welcome channel
-        const welcomeChannel = botControllers.getChannel(member.guild, defaults.defaultWelcome);
+        const welcomeChannel = botControllers.getChannel(member, defaults.defaultWelcome);
     
         // Assign "Member" role to new member
         member.addRole(membersRole).then(() => {
@@ -94,10 +94,10 @@ const botControllers = {
         if (message.member.hasPermission('MANAGE_ROLES')) {
 
             // Get "Senior Members" role
-            const seniorRole = botControllers.getRole(message.guild, 'Senior Members');
+            const seniorRole = botControllers.getRole(message, 'Senior Members');
 
             // Get "Members" role
-            const memberRole = botControllers.getRole(message.guild, 'Members');
+            const memberRole = botControllers.getRole(message, 'Members');
 
             // Loop for each member mentioned
             message.mentions.members.forEach((member) => {
@@ -116,7 +116,7 @@ const botControllers = {
                         .setColor('#e0c619')
                         .setTitle('New Senior Member')
                         .setAuthor(member.user.tag, member.user.avatarURL)
-                        .setDescription(`Hello I'm <@${member.user.id}>. I just became a Senior Member.`)
+                        .setDescription(`Hello, I'm <@${member.user.id}>. I just became a Senior Member.`)
                         .setThumbnail(member.user.avatarURL)
                         .setFooter(date);
 
