@@ -3,12 +3,14 @@ const defaults = require('../defaults');
 
 const botControllers = {
 
+    // Get guild roles
     getRole: (context, targetRole) => {
         return context.roles.find((role) => {
             return role.name === targetRole;
         });
     },
 
+    // Get guild channels
     getChannel: (context, targetChannel) => {
         return context.channels.find((channel) => {
             return channel.name === targetChannel;
@@ -35,7 +37,7 @@ const botControllers = {
                 .setColor('#e0c619')
                 .setTitle('New Member')
                 .setAuthor(member.user.tag, member.user.avatarURL)
-                .setDescription(`Hello I'm <@${member.user.id}>. I just became a member.`)
+                .setDescription(`Hello, I'm <@${member.user.id}>. I just became a member.`)
                 .setThumbnail(member.user.avatarURL)
                 .setFooter(date);
     
