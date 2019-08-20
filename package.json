@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "bot": "nodemon index.js"
   },
   "author": "William Tirado",
   "license": "ISC",
