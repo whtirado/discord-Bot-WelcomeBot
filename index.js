@@ -56,6 +56,14 @@ bot.on('message', (message) => {
 
         }
 
+        // Command error (Not command)
+        else {
+
+            // Send message to channel
+            message.channel.send(`Not a valid command ( ${message.content} )`);
+
+        }
+
     }
 });
 
