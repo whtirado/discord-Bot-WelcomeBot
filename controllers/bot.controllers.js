@@ -29,7 +29,7 @@ const botControllers = {
         const welcomeChannel = botControllers.getChannel(member, defaults.defaultWelcome);
     
         // Assign "Member" role to new member
-        member.addRole(membersRole).then(() => {
+        member.addRole(membersRole).then((member) => {
 
             const date = (new Date()).toDateString();
 
@@ -68,21 +68,28 @@ const botControllers = {
             // Affected members
             let affectedMembers = 0;
     
-            // Assign "Members" role to new members
-            message.guild.members.forEach((member) => {
-                if (member.roles.size == 1) {
-    
-                    // Increment number of members affected by command
-                    affectedMembers += 1;
-    
-                    // Assign "Members" role
-                    botControllers.AssignMembersRole(member);
-    
-                }
+            // Get all guild members
+            message.guild.fetchMembers().then((guild) => {
+
+                // Loop for each member
+                guild.members.forEach((member) => {
+
+                    // Check if member only has one role
+                    if (member.roles.size == 1) {
+        
+                        // Increment number of members affected by command
+                        affectedMembers += 1;
+        
+                        // Assign "Members" role
+                        botControllers.AssignMembersRole(member);
+        
+                    }
+                });
+
+                // Respond to member with command details
+                message.channel.send(`Command excecuted: ${affectedMembers} member(s) affected.`);
+
             });
-    
-            // Respond to member with command details
-            message.channel.send(`Command excecuted: ${affectedMembers} member(s) affected.`);
     
         }
     
